@@ -1,0 +1,29 @@
+# top-most EditorConfig file
+root = true
+
+# Default settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# YAML files (critical for Helm)
+[*.yaml]
+indent_style = space
+indent_size = 2
+
+[*.yml]
+indent_style = space
+indent_size = 2
+
+# Helm template files
+[*.tpl]
+indent_style = space
+indent_size = 2
+
+# Markdown or other text files
+[*.md]
+trim_trailing_whitespace = false

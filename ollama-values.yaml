@@ -1,0 +1,27 @@
+# ollama-values.yaml
+
+# Enable GPU support
+ollama:
+  gpu:
+    enabled: true
+
+service:
+  type: ClusterIP
+  port: 11434
+
+ingress:
+  enabled: false
+
+# Resource limits from your Docker Compose
+resources:
+  limits:
+    memory: 16G
+  requests:
+    # It's good practice to also set requests
+    memory: 8G
+
+# Configure persistent storage
+persistentVolume:
+  enabled: true
+  storageClassName: "standard"
+  size: 50Gi # Adjust size as needed

@@ -1,0 +1,41 @@
+# open-webui-values.yaml
+
+ollama:
+  # -- Disable installation of Ollama. We install it already in previous steps.
+  enabled: false
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "500Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  class: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: mkcert-cluster-issuer
+  host: "openwebui-192-168-49-2.traefik.me"
+  tls: true
+
+persistence:
+  enabled: true
+  size: 2Gi
+  storageClass: "standard"
+
+# -- Disable the use of OpenAI APIs
+enableOpenaiApi: false
+
+commonEnvVars:
+  - name: ENABLE_OLLAMA_API
+    value: "true"
+  - name: OLLAMA_BASE_URL
+    value: "http://ollama.ollama.svc.cluster.local:11434"
+  - name: K8S_FLAG
+    value: "true"
