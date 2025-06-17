@@ -12,6 +12,7 @@ This guide will walk you through setting up Ollama and Open-WebUI, and then expl
   - [Open-WebUI Deployment](#open-webui-deployment-with-helm)
 - [Accessing the Services](#accessing-the-services)
 - [Verifying the Installation](#verifying-the-installation)
+- [Testing CUDA in Containers](#testing-cuda-in-containers)
 - [Updating and Upgrading](#updating-and-upgrading)
 - [Uninstalling and Cleanup](#uninstalling-and-cleanup)
 - [Troubleshooting](#troubleshooting)
@@ -179,11 +180,43 @@ To verify that your installation is working correctly:
    ```
    This should return a JSON response with available models.
 
-4. **Test GPU access**:
+## Testing CUDA in Containers
+
+Testing CUDA functionality is essential when running GPU-accelerated workloads like Ollama. Proper CUDA configuration ensures that your LLM models can leverage GPU acceleration for faster inference. This section provides methods to verify CUDA is working correctly in your containerized environment.
+
+To ensure that CUDA is properly configured and functioning in your containers, follow these steps:
+
+### Basic CUDA Verification
+
+1. **Check NVIDIA Driver and CUDA Version**:
    ```bash
    kubectl exec -it -n ollama $(kubectl get pods -n ollama -l app.kubernetes.io/name=ollama -o name) -- nvidia-smi
    ```
-   This should display GPU information if properly configured.
+   This command should display information about your GPU, including the NVIDIA driver version and CUDA version.
+
+### Testing CUDA Functionality with Ollama
+
+1. **Run a Simple CUDA Test**:
+   ```bash
+   kubectl exec -it -n ollama $(kubectl get pods -n ollama -l app.kubernetes.io/name=ollama -o name) -- bash -c "nvidia-smi -q"
+   ```
+   This provides detailed information about your GPU, including memory usage, utilization, and processes.
+
+2. **Test CUDA with a Model**:
+   ```bash
+   # Pull a CUDA-compatible model
+   kubectl exec -it -n ollama $(kubectl get pods -n ollama -l app.kubernetes.io/name=ollama -o name) -- ollama pull llama2
+
+   # Run a simple inference to test GPU acceleration
+   kubectl exec -it -n ollama $(kubectl get pods -n ollama -l app.kubernetes.io/name=ollama -o name) -- bash -c 'echo "Explain quantum computing in simple terms" | ollama run llama2'
+   ```
+
+3. **Monitor GPU Usage During Inference**:
+   ```bash
+   # In a separate terminal, run:
+   kubectl exec -it -n ollama $(kubectl get pods -n ollama -l app.kubernetes.io/name=ollama -o name) -- watch -n 0.5 nvidia-smi
+   ```
+   This will show real-time GPU usage. When running inference with Ollama, you should see GPU utilization increase.
 
 ## Updating and Upgrading
 
