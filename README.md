@@ -151,6 +151,14 @@ helm repo update
 
 5. Configure `open-webui-values.yaml`
 
+Before configuring the open-webui-values.yaml file, you need to determine your minikube IP address, which will be used in the ingress configuration to access the service later:
+
+```bash
+minikube ip
+```
+
+Make note of this IP address (e.g., 192.168.49.2) as you'll need to include it in the hostname configuration.
+
 Create a file named open-webui-values.yaml to customize the Open-WebUI deployment. This file should include the necessary configurations to connect to your Ollama instance.
 
 6. Install Open-WebUI
