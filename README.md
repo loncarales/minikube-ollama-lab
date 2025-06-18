@@ -1,4 +1,4 @@
-# LLMs on Minikube: Ollama and OpenWebUI with Ingress & TLS for Local AI Development
+# LLMs on Minikube: Ollama and OpenWebUI with Ingress & TLS
 
 ![Kubernetes](https://img.shields.io/badge/kubernetes-minikube-blue)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
