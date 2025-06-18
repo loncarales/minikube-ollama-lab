@@ -34,7 +34,7 @@ This document contains a checklist of improvement tasks for the Ollama and OpenW
 
 ## Automation
 
-22. [ ] Create a Makefile or shell script to automate the entire deployment process
+22. [x] Create a Makefile or shell script to automate the entire deployment process
 23. [ ] Implement CI/CD pipeline for automated testing and deployment
 24. [ ] Add automated health checks for the deployed services
 25. [ ] Create scripts for common operations (backup, restore, scaling)

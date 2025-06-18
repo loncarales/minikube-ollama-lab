@@ -22,11 +22,14 @@ Running Large Language Models (LLMs) locally with GPU acceleration provides:
 ## Table of Contents
 - [Prerequisites](#prerequisites)
 - [Setup Instructions](#setup-instructions)
-  - [Start Minikube](#start-minikube)
-  - [Enable Ingress](#enable-ingress)
-  - [Install cert-manager](#install-cert-manager)
-  - [Ollama Deployment](#ollama-deployment-with-helm)
-  - [Open-WebUI Deployment](#open-webui-deployment-with-helm)
+  - [Automated Deployment](#automated-deployment)
+    - [Using the Makefile](#using-the-makefile)
+  - [Manual Deployment](#manual-deployment)
+    - [Start Minikube](#start-minikube)
+    - [Enable Ingress](#enable-ingress)
+    - [Install cert-manager](#install-cert-manager)
+    - [Ollama Deployment](#ollama-deployment-with-helm)
+    - [Open-WebUI Deployment](#open-webui-deployment-with-helm)
 - [Accessing the Services](#accessing-the-services)
 - [Verifying the Installation](#verifying-the-installation)
 - [Testing CUDA in Containers](#testing-cuda-in-containers)
@@ -47,7 +50,49 @@ Before you begin, ensure you have the following installed and configured:
 
 ## 🚀 Setup Instructions
 
-### 🖥️ Start Minikube
+You have two options for deploying the project:
+
+1. **Automated Deployment**: Using the provided Makefile
+2. **Manual Deployment**: Following the step-by-step instructions
+
+### 🤖 Automated Deployment
+
+#### Using the Makefile
+
+A Makefile is provided to automate the entire deployment process. To use it:
+
+```bash
+# Deploy everything with default settings
+make
+
+# Or run specific steps
+make start           # Start Minikube with GPU support
+make setup-ingress   # Enable Ingress addon
+make setup-cert-manager # Install cert-manager and configure TLS
+make deploy-ollama   # Deploy Ollama
+make deploy-openwebui # Deploy OpenWebUI
+make verify          # Verify the installation
+
+# To clean up
+make clean           # Uninstall all components
+make delete          # Delete Minikube cluster
+
+# For help
+make help
+```
+
+You can customize the Minikube settings by setting variables:
+
+```bash
+# Example with custom settings
+MINIKUBE_MEMORY=32768m MINIKUBE_CPUS=12 make
+```
+
+### 🔄 Manual Deployment
+
+If you prefer to deploy manually, follow these steps:
+
+#### 🖥️ Start Minikube
 
 Start your Minikube cluster with the appropriate GPU flags:
 
@@ -56,12 +101,12 @@ Start your Minikube cluster with the appropriate GPU flags:
 minikube delete
 
 # Start a new cluster with sufficient resources
-minikube start --driver=docker --gpus=all --memory=24576m --cpus=8
+minikube start --driver=docker --gpus=all --memory=16384m --cpus=4 --nodes=2 --wait=all
 ```
 
 By starting your Minikube cluster with these settings, you ensure that the underlying infrastructure is capable of supporting the resource demands of your Kubernetes deployment, preventing scheduling failures and ensuring smooth operation.
 
-### 🌐 Enable Ingress
+#### 🌐 Enable Ingress
 
 Enable the Nginx Ingress controller in Minikube:
 
@@ -69,7 +114,7 @@ Enable the Nginx Ingress controller in Minikube:
 minikube addons enable ingress
 ```
 
-### 🔒 Create locally signed SSL certificates with mkcert
+#### 🔒 Create locally signed SSL certificates with mkcert
 
 Before installing cert-manager, you need to create locally signed SSL certificates using mkcert:
 
@@ -79,7 +124,7 @@ Before installing cert-manager, you need to create locally signed SSL certificat
 mkcert -install
 ```
 
-### 🛡️ Install cert-manager
+#### 🛡️ Install cert-manager
 
 To manage TLS certificates in your Kubernetes cluster, you can use cert-manager. This tool automates the management and issuance of TLS certificates.
 
@@ -113,24 +158,22 @@ spec:
     secretName: mkcert-ca-key-pair
 ```
 
-
-1. Ollama Deployment with Helm
+#### 🧠 Ollama Deployment with Helm
 
 There's a community-maintained Helm chart that works well for deploying Ollama.
-Add the Helm Repository
 
-First, add the Helm repository that contains the Ollama chart:
+1. Add the Helm Repository:
 
 ```bash
 helm repo add otwld https://helm.otwld.com/
 helm repo update
 ```
 
-2. Configure `ollama-values.yaml`
+2. Configure `ollama-values.yaml`:
 
-Create a file named ollama-values.yaml to customize the deployment.
+The repository includes an `ollama-values.yaml` file with the necessary configurations.
 
-3. Install Ollama
+3. Install Ollama:
 
 ```bash
 helm upgrade --install ollama otwld/ollama \
@@ -138,18 +181,18 @@ helm upgrade --install ollama otwld/ollama \
   -f ollama-values.yaml
 ```
 
-4. Open-WebUI Deployment with Helm
+#### 🖥️ Open-WebUI Deployment with Helm
 
 Next, deploy Open-WebUI using Helm. This will allow you to manage the web interface for Ollama.
 
-Add the Open-WebUI Helm repository:
+1. Add the Open-WebUI Helm repository:
 
 ```bash
 helm repo add open-webui https://open-webui.github.io/helm-charts
 helm repo update
 ```
 
-5. Configure `open-webui-values.yaml`
+2. Configure `open-webui-values.yaml`:
 
 Before configuring the open-webui-values.yaml file, you need to determine your minikube IP address, which will be used in the ingress configuration to access the service later:
 
@@ -159,9 +202,9 @@ minikube ip
 
 Make note of this IP address (e.g., 192.168.49.2) as you'll need to include it in the hostname configuration.
 
-Create a file named open-webui-values.yaml to customize the Open-WebUI deployment. This file should include the necessary configurations to connect to your Ollama instance.
+The repository includes an `open-webui-values.yaml` file that you may need to update with your Minikube IP.
 
-6. Install Open-WebUI
+3. Install Open-WebUI:
 
 ```bash
 helm upgrade --install open-webui open-webui/open-webui \
@@ -201,7 +244,7 @@ To verify that your installation is working correctly:
 
 3. **Test Ollama API**:
    ```bash
-   kubectl run -it -n ollama --rm debug --image=byrnedo/alpine-curl --restart=Never -- -k http://ollama:11434/api/tags | j
+   kubectl run -it -n ollama --rm debug --image=byrnedo/alpine-curl --restart=Never -- -k http://ollama:11434/api/tags | jq
    ```
    This should return a JSON response with available models.
 

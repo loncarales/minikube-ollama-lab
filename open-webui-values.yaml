@@ -21,7 +21,7 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: mkcert-cluster-issuer
-  host: "openwebui-192-168-49-2.traefik.me"
+  host: "openwebui-X-X-X-X.traefik.me"
   tls: true
 
 persistence:
@@ -37,5 +37,3 @@ commonEnvVars:
     value: "true"
   - name: OLLAMA_BASE_URL
     value: "http://ollama.ollama.svc.cluster.local:11434"
-  - name: K8S_FLAG
-    value: "true"
