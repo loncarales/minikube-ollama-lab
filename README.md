@@ -1,9 +1,9 @@
-# LLMs on Minikube: Ollama and OpenWebUI with Ingress & TLS
+# Zero-Config LLMs on Minikube: One-Command Deployment of Ollama and OpenWebUI with Ingress and TLS
 
 ![Kubernetes](https://img.shields.io/badge/kubernetes-minikube-blue)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-This guide will walk you through setting up Ollama and OpenWebUI, and then explain how to configure an Ingress controller.
+This project provides a zero-configuration, one-command deployment of Ollama and OpenWebUI on Minikube with Ingress and TLS support. Simply run `make` and everything is set up automatically - no manual configuration required!
 
 ---
 
@@ -15,6 +15,7 @@ Running Large Language Models (LLMs) locally with GPU acceleration provides:
 - ✅ Lower latency compared to cloud-based solutions
 - ✅ No subscription costs for API usage
 - ✅ Full control over model selection and configuration
+- ✅ Zero-configuration setup with a single command
 - ✅ Perfect for development, testing, and learning environments
 
 ---
@@ -22,8 +23,8 @@ Running Large Language Models (LLMs) locally with GPU acceleration provides:
 ## Table of Contents
 - [Prerequisites](#prerequisites)
 - [Setup Instructions](#setup-instructions)
-  - [Automated Deployment](#automated-deployment)
-    - [Using the Makefile](#using-the-makefile)
+  - [Zero-Config Automated Deployment](#zero-config-automated-deployment)
+    - [One Command Setup with Makefile](#one-command-setup-with-makefile)
   - [Manual Deployment](#manual-deployment)
     - [Start Minikube](#start-minikube)
     - [Enable Ingress](#enable-ingress)
@@ -52,14 +53,14 @@ Before you begin, ensure you have the following installed and configured:
 
 You have two options for deploying the project:
 
-1. **Automated Deployment**: Using the provided Makefile
+1. **Zero-Config Automated Deployment**: One command setup using the provided Makefile
 2. **Manual Deployment**: Following the step-by-step instructions
 
-### 🤖 Automated Deployment
+### 🤖 Zero-Config Automated Deployment
 
-#### Using the Makefile
+#### One Command Setup with Makefile
 
-A Makefile is provided to automate the entire deployment process. To use it:
+A Makefile is provided to automate the entire deployment process with zero configuration required. Just one command sets up everything from Minikube to Ollama and OpenWebUI with proper networking and security. To use it:
 
 ```bash
 # Deploy everything with default settings
