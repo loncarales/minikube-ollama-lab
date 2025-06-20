@@ -404,4 +404,4 @@ MIT - see [LICENSE](LICENSE)
 
 - Inspired by the open-source LLM community
 - Made possible by [Ollama](https://ollama.ai/) and [Open-WebUI](https://github.com/open-webui/open-webui)
-- Developed with ❤️ for the AI community
+- Developed with ❤️ by Aleš Lončar
