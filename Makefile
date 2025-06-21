@@ -6,16 +6,10 @@ MINIKUBE_CPUS ?= 4
 MINIKUBE_NODES ?= 2
 MINIKUBE_DRIVER ?= docker
 
-# Get Minikube IP and format it for the hostname
-MINIKUBE_IP = $(shell minikube ip 2>/dev/null | tr '.' '-')
-OPENWEBUI_HOST = openwebui-$(MINIKUBE_IP).traefik.me
-
 .PHONY: all clean start stop delete setup-ingress setup-cert-manager deploy-ollama deploy-openwebui verify help
 
 # Default target
 all: start setup-ingress setup-cert-manager deploy-ollama deploy-openwebui verify
-	@echo "✅ Deployment complete!"
-	@echo "🌐 Access OpenWebUI at: https://$(OPENWEBUI_HOST)"
 
 # Help message
 help:
