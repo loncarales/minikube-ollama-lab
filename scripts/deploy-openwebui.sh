@@ -3,11 +3,20 @@ set -euo pipefail
 
 source "$(dirname "$0")/common.sh"
 
-MINIKUBE_IP=$(minikube ip 2>/dev/null | tr '.' '-')
+# Check if this is macOS or Windows
+if ! is_linux; then
+  warn "⚠️ You'll need to open minikube tunnel in a separate terminal to expose nginx ingress controller."
+  # Use 127.0.0.1 for macOS | Windows as minikube ip as Docker is running in a VM
+  MINIKUBE_IP="127.0.0.1"
+
+else
+  MINIKUBE_IP=$(minikube ip 2>/dev/null | tr '.' '-')
+fi
+
 OPENWEBUI_HOST=openwebui-${MINIKUBE_IP}.traefik.me
 
 info "🖥️  Deploying OpenWebUI..."
-info "📝 Updating OpenWebUI values with Minikube IP: ${MINIKUBE_IP}"
+info "📝 Updating OpenWebUI values with IP: ${MINIKUBE_IP}"
 sed -i.bak "s/openwebui-.*\.traefik\.me/${OPENWEBUI_HOST}/" open-webui-values.yaml
 info "🔗 Setting OpenWebUI host to ${OPENWEBUI_HOST}"
 

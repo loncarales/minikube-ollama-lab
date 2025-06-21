@@ -22,3 +22,19 @@ warn() {
 error() {
   echo -e "${RED}[ERROR]${NC} $1"
 }
+
+check_gpu_support() {
+  if docker info | grep -i "nvidia" &>/dev/null; then
+    return 0 # 0 = success
+  else
+    return 1 # 1 = failure
+  fi
+}
+
+is_linux() {
+  if [[ "$(uname)" == "Linux" ]]; then
+    return 0 # 0 = success
+  else
+    return 1 # 1 = failure
+  fi
+}

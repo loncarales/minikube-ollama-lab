@@ -3,7 +3,7 @@
 # Enable GPU support
 ollama:
   gpu:
-    enabled: true
+    enabled: XXXX
 
 service:
   type: ClusterIP

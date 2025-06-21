@@ -32,7 +32,16 @@ if minikube status &>/dev/null; then
     exit 0
 fi
 
+# Check if the GPU is enabled in docker
+if check_gpu_support; then
+    info "✅ GPU support is enabled in Docker. Running Minikube with GPU support."
+    GPU_SUPPORT="--gpus=all"
+else
+    warn "⚠️ GPU support is not enabled in Docker. Running Minikube without GPU support."
+    GPU_SUPPORT=""
+fi
+
 info "🚀 Starting Minikube with GPU support..."
-minikube start --driver="$MINIKUBE_DRIVER" --gpus=all --memory="$MINIKUBE_MEMORY" --cpus="$MINIKUBE_CPUS" --nodes="$MINIKUBE_NODES" --wait=all
+minikube start --driver="$MINIKUBE_DRIVER" --memory="$MINIKUBE_MEMORY" --cpus="$MINIKUBE_CPUS" --nodes="$MINIKUBE_NODES" $GPU_SUPPORT --wait=all
 success "✅ Minikube started successfully"
 success "🖥️  Minikube IP: $(minikube ip)"
