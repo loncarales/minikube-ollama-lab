@@ -45,16 +45,23 @@ Before you begin, ensure you have the following installed and configured:
 - Minikube: Your local Kubernetes cluster.
 - kubectl: The Kubernetes command-line tool.
 - Helm: The package manager for Kubernetes.
-- mkcert: A simple tool for making locally-trusted development certificates.
-- NVIDIA Container Toolkit: Properly installed on your system to enable GPU access within containers.
-- CUDA Toolkit and cuda-drivers installed
+- mkcert: A simple tool for making locally trusted development certificates.
+
+### Optional GPU Support Prerequisites
+
+The following is only required if you can use GPU acceleration and have a compatible NVIDIA GPU:
+
+- NVIDIA Container Toolkit: Enables GPU access within containers.
+- CUDA Toolkit and cuda-drivers: Required for GPU acceleration.
+
+> **Note:** This project now includes cross-platform support and dynamic GPU detection. It will automatically detect if GPU support is available and configure the deployment accordingly.
 
 ## 🚀 Setup Instructions
 
 You have two options for deploying the project:
 
 1. **Zero-Config Automated Deployment**: One command setup using the provided Makefile
-2. **Manual Deployment**: Following the step-by-step instructions
+2. **Manual Deployment**: Following the step-by-step instructions. You'll need to configure Minikube, Ingress, cert-manager, Ollama, and Open-WebUI manually.
 
 ### 🤖 Zero-Config Automated Deployment
 
@@ -95,7 +102,7 @@ If you prefer to deploy manually, follow these steps:
 
 #### 🖥️ Start Minikube
 
-Start your Minikube cluster with the appropriate GPU flags:
+Start your Minikube cluster with the appropriate resources:
 
 ```bash
 # First, if you have an existing Minikube cluster, delete it
@@ -251,9 +258,11 @@ To verify that your installation is working correctly:
 
 ## 🔥 Testing CUDA in Containers
 
-Testing CUDA functionality is essential when running GPU-accelerated workloads like Ollama. Proper CUDA configuration ensures that your LLM models can leverage GPU acceleration for faster inference. This section provides methods to verify CUDA is working correctly in your containerized environment.
+If you're using GPU acceleration, testing CUDA functionality is essential when running GPU-accelerated workloads like Ollama. Proper CUDA configuration ensures that your LLM models can leverage GPU acceleration for faster inference. This section provides methods to verify CUDA is working correctly in your containerized environment.
 
-To ensure that CUDA is properly configured and functioning in your containers, follow these steps:
+> **Note:** With the new cross-platform support and dynamic GPU detection, GPU acceleration is optional. If you don't have GPU support available, the system will automatically run in CPU-only mode, and you can skip this section.
+
+To ensure that CUDA is properly configured and functioning in your containers (if you have GPU support), follow these steps:
 
 ### Basic CUDA Verification
 
@@ -362,7 +371,7 @@ To remove the deployment and clean up resources:
    minikube start --driver=docker --gpus=all --memory=32768m --cpus=12
    ```
 
-2. **GPU not detected in containers**:
+2. **GPU not detected in containers** (only relevant if you're using GPU acceleration):
    - **Issue**: NVIDIA Container Toolkit not properly configured.
    - **Solution**: Verify the toolkit installation and ensure the Docker runtime is configured correctly.
    ```bash
